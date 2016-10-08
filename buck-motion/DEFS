@@ -1,0 +1,40 @@
+def ruby_library(
+    name,
+    srcs):
+    import hashlib
+    import os
+    deps = [];
+
+    def _ruby_library(
+        name,
+        src,
+        init_name):
+      genrule(
+        name = name,
+        out = os.path.basename(src + '.s'),
+        bash = 'echo "$OUT\n' + init_name + '\n$SRCS\nquit\n" | $(exe //buck-motion:rm_compiler)',
+        srcs = [src],
+      )
+
+    for src in srcs:
+      abs_path = os.path.abspath(os.path.join(get_base_path(), src))
+      token = hashlib.sha256(abs_path).hexdigest()
+      deps.append(':' + token)
+      _ruby_library(
+        name = token,
+        src = src,
+        init_name = 'MREP_' + token,
+      )
+
+    genrule(
+        name='init-' + name,
+        srcs=srcs,
+        bash='echo $SRCS | ruby $(location //buck-motion:create_init.rb) > $OUT',
+        out='init.mm'
+    )
+
+    cxx_library(
+      name = name,
+      srcs = deps + [':init-' + name] + ['//buck-motion:main.mm'],
+      deps = deps + ['//buck-motion:rubymotion-static'],
+    )

@@ -1,0 +1,28 @@
+sh_binary(
+    name = 'rm_compiler',
+	main = 'rm_compiler.sh',
+    visibility=['PUBLIC']
+)
+
+export_file(
+    name = 'create_init.rb',
+    visibility=['PUBLIC']
+)
+
+export_file(
+    name='main.mm',
+    visibility=['PUBLIC']
+)
+
+genrule(
+  name='librubymotion-static',
+  bash='ln -s /Library/RubyMotion/data/ios/9.3/iPhoneSimulator/librubymotion-static.a $OUT',
+  out='librubymotion-static.a'
+)
+
+prebuilt_cxx_library(
+  name = 'rubymotion-static',
+  lib_dir = '$(location :librubymotion-static)/../',
+  force_static=True,
+  visibility=['PUBLIC']
+)
