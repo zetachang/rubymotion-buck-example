@@ -4,6 +4,9 @@
   cxxflags = -g -std=c++14
   combined_preprocess_and_compile = true
 
+[motion]
+  sdk_version=9.3
+
 [project]
   ide = xcode
   ignore = .buckd, \

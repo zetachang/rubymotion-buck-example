@@ -16,7 +16,7 @@ export_file(
 
 genrule(
   name='librubymotion-static',
-  bash='ln -s /Library/RubyMotion/data/ios/9.3/iPhoneSimulator/librubymotion-static.a $OUT',
+  bash='ln -s /Library/RubyMotion/data/ios/' + read_config("motion", "sdk_version") + '/iPhoneSimulator/librubymotion-static.a $OUT',
   out='librubymotion-static.a'
 )
 

@@ -12,7 +12,7 @@ def ruby_library(
       genrule(
         name = name,
         out = os.path.basename(src + '.s'),
-        bash = 'echo "$OUT\n' + init_name + '\n$SRCS\nquit\n" | $(exe //buck-motion:rm_compiler)',
+        bash = 'echo "$OUT\n' + init_name + '\n$SRCS\nquit\n" | SDK_VERSION=' + read_config("motion", "sdk_version") + ' $(exe //buck-motion:rm_compiler)',
         srcs = [src],
       )
 
